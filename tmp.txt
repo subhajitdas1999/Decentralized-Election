@@ -1,0 +1,215 @@
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { web3, loadWeb3 } from "../web3";
+import getElectionInstance from "../election";
+
+//this for get the enum state in string as we get uint in return
+let enumStates = {
+  0: "creation",
+  1: "voting",
+  2: "ended",
+};
+
+function ElectionPortal() {
+  //details of url of the page
+  let url = useParams();
+
+  
+
+  //for page loading manage
+  const [isLoading, setIsLoading] = useState(true);
+
+  //for store candidate name and address
+  const [inputCandidateDetails, setInputCandidateDetails] = useState({
+    candidateName: "",
+    candidateAddress: "",
+  });
+ 
+//storing the instance of election
+  const [blockchainData, setBlockchainData] = useState({
+    electionInstance: "",
+  });
+
+  //this one is for table data
+  const [showElection, setShowElection] = useState({
+    state: "",
+    candidates: [],
+  });
+
+  useEffect(() => {
+    (async () => {
+      await loadElectionData();
+    })();
+  }, []);
+
+  const loadElectionData = async () => {
+    const accounts = await web3.eth.getAccounts();
+    const electionInstance = getElectionInstance(url.address);
+    const state = await electionInstance.methods.state().call();
+
+    const candidateCount = await electionInstance.methods
+      .candidateCount()
+      .call();
+
+    const allCandidateDetails = await Promise.all(
+      Array(parseInt(candidateCount))
+        .fill()
+        .map((element, idx) => {
+          return electionInstance.methods.candidates(idx + 1).call();
+        })
+    );
+    setShowElection({
+      state: enumStates[state],
+      candidates: allCandidateDetails,
+    });
+
+    setBlockchainData({
+      electionInstance: electionInstance,
+    });
+    console.log(state);
+
+    
+
+    setIsLoading(false);
+  };
+
+  //to render all the candidate details to the page
+  const renderCandidateTable = (electionData) => {
+    console.log(electionData.state);
+    return electionData.candidates.map((candidate, idx) => {
+      return (
+        <div key={idx + 1}>
+          <p>Name : {candidate.candidateName}</p>
+          <p>address:{candidate.candidateAddress}</p>
+          {(electionData.state === "creation" ||
+            electionData.state === "ended") && (
+            <p>votes:{candidate.candidateVote}</p>
+          )}
+
+          {electionData.state === "voting" && (
+            <button onClick={handleVote} id={candidate.candidateId}>
+              vote
+            </button>
+          )}
+        </div>
+      );
+    });
+  };
+
+  
+  const handleChange = (e) => {    
+    setInputCandidateDetails((prev) => {
+      return {
+        ...prev,
+        [e.target.name]: e.target.value,
+      };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      //we are calling this func again because to make sure users has connected the metamask account
+      await loadWeb3();
+      const accounts = await web3.eth.getAccounts();
+      // console.log("acc",accounts)
+      await blockchainData.electionInstance.methods
+        .addCandidate(
+          inputCandidateDetails.candidateName,
+          inputCandidateDetails.candidateAddress
+        )
+        .send({ from: accounts[0] });
+
+      window.location.reload(false);
+    } catch (err) {
+      alert("Something went wrong.\nRefresh The page");
+    }
+  };
+
+  const handleFinalise = async () => {
+    try {
+      await loadWeb3();
+      const accounts = await web3.eth.getAccounts();
+      await blockchainData.electionInstance.methods
+        .finalizeCandidate()
+        .send({ from: accounts[0] });
+
+      window.location.reload(false);
+    } catch (err) {
+      alert("Something went wrong.\nRefresh The page");
+    }
+  };
+
+  const handleVote = async (e) => {
+    console.log(parseInt(e.target.id));
+
+    try {
+      await loadWeb3();
+      const accounts = await web3.eth.getAccounts();
+      await blockchainData.electionInstance.methods
+        .doVote(parseInt(e.target.id))
+        .send({ from: accounts[0] });
+    } catch (err) {
+      alert("Something went wrong.\nRefresh The page");
+    }
+  };
+
+  const handleEndVoting = async () => {
+    try {
+      await loadWeb3();
+      const accounts = await web3.eth.getAccounts();
+      await blockchainData.electionInstance.methods
+        .endVoting()
+        .send({ from: accounts[0] });
+
+      window.location.reload(false);
+    } catch (err) {
+      alert("Something went wrong.\nRefresh The page");
+    }
+  };
+
+  return (
+    <div className="electionPortal">
+      <Link to="/">home</Link>
+      {isLoading ? (
+        <h1>Loading...</h1>
+      ) : showElection.state==="creation" ? (
+        //this is for creation phase
+        <div className="creationPhase">
+          <h1>Add candidates </h1>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="name"
+              name="candidateName"
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              placeholder="candidateAddress"
+              name="candidateAddress"
+              onChange={handleChange}
+            />
+
+            <input type="submit" />
+          </form>
+          <button onClick={handleFinalise}>finalise</button>
+        </div>
+      ) : showElection.state==="voting" ? (
+        //this is for voting phase
+        <div className="votingPhase">
+          <h1>lets do voting</h1>
+          <button onClick={handleEndVoting}>end voting</button>
+        </div>
+      ) : (
+        <div className="endedPhase">
+          <h1>voting ended</h1>
+        </div>
+      )}
+      {renderCandidateTable(showElection)}
+    </div>
+  );
+}
+
+export default ElectionPortal;

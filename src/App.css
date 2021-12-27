@@ -1,0 +1,368 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+
+:root {
+  --primary-color: #fff;
+  --secondary-color: #171717;
+}
+
+.App.darkmode {
+  --primary-color: #171717;
+  --secondary-color: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  position: relative;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+a{
+  text-decoration: none;
+}
+/* Header */
+
+.header {
+  position: absolute;
+  top: 2%;
+  left: 5%;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem;
+}
+
+.header__home {
+  padding: 5px;
+  border: 5px solid #ff6600;
+}
+
+.header__home a {
+  
+  color: var(--secondary-color);
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.header__menu_hamberger {
+  padding: 5px;
+  position: relative;
+  cursor: pointer;
+  z-index: 2;
+  min-height: 35px;
+}
+
+.header__menu_hamberger .line {
+  background-color: #ff6600;
+  width: 28px;
+  height: 3px;
+  margin: 4px 0;
+  border-radius: 25px;
+  transition: transform 0.2s ease-in;
+}
+
+.header__menu_hamberger.active .line3 {
+  display: none;
+}
+.header__menu_hamberger.active .line1 {
+  transform: rotate(50deg) translateX(4px);
+  transition: transform 0.2s ease-in;
+}
+.header__menu_hamberger.active .line2 {
+  transform: rotate(-50deg) translateX(4px);
+  transition: transform 0.2s ease-in;
+}
+
+.header__menu_list {
+  /* display: none; */
+  z-index: 2;
+  /* background-color: blueviolet; */
+  position: absolute;
+  list-style: none;
+  top: 8rem;
+  right: 15%;
+}
+
+.header__menu_list.active {
+  display: block;
+}
+
+.header__menu_list > * {
+  text-align: center;
+  cursor: pointer;
+  margin: 20px 25px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.header__menu_list li:nth-child(1) {
+  transition: all 0.5s ease 0.2s;
+}
+.header__menu_list li:nth-child(2) {
+  /* display: none; */
+  transition: all 0.5s ease 0.4s;
+}
+
+.header__menu_list.active > * {
+  opacity: 1;
+  visibility: visible;
+}
+
+.header__menu_list li a {
+  padding: 0 10px;
+  
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+.header__menu_list_lightmode {
+  color: var(--primary-color);
+}
+
+.header__menu_bg_cicle {
+  position: absolute;
+  background-color: var(--secondary-color);
+  width: 10px;
+  height: 10px;
+  top: 0;
+  right: 0;
+  transform: translateY(-35px) translateX(35px);
+  border-radius: 50%;
+  transition: all 0.5s ease;
+}
+
+.header__menu_bg_cicle.active {
+  width: 800px;
+  height: 800px;
+  transform: translateY(-40%) translateX(30%);
+}
+/***************************************************************/
+/* Home */
+
+.home > * {
+  min-height: 100vh;
+}
+
+.home__part1 {
+  background-color: var(--primary-color);
+  background-image: url("./homeHero.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+}
+
+.home__part1_details {
+  margin-left: 6%;
+  text-transform: uppercase;
+  font-size: max(3vw, 1.2rem);
+  font-weight: bold;
+  /* color: black; */
+}
+.home__part1_details_highlightText {
+  color: #ff6600;
+}
+
+.home__part2 {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.home_part2_heading {
+  text-align: center;
+  padding: 1.2rem 0;
+}
+
+.home__part2_card_container {
+  /* padding:0 2rem; */
+  min-height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.home__part2_loading{
+  /* width: fit-content !important; */
+  margin:   0!important;
+}
+
+.home__part2_card_container > * {
+  margin: 1rem;
+}
+
+.card {
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-color) !important;
+  box-shadow: 0px 0px 2px var(--secondary-color) !important;
+  overflow-wrap: break-word;
+}
+
+/***************************************************************/
+
+/****New*********/
+
+.new {
+  min-height: 100vh;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.new__header{
+  margin-top: max(2vw,3.5rem);
+  font-size: max(2vw,1rem);
+}
+.new__container {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  flex-wrap: wrap;
+}
+.new__container > * {
+  min-width: 200px;
+  margin: 1rem 0;
+}
+.new__left h2 {
+  text-align: center;
+}
+
+.new__left_guidlines {
+  max-width: 350px;
+
+  /* padding: 0 1rem; */
+}
+.new__left_guidlines p {
+  position: relative;
+}
+.new__left_guidlines p::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: -10px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+}
+
+.new__right {
+  width: 350px;
+}
+
+.name__filed {
+  display: block;
+  width: 100%;
+  height: 2.5rem;
+  font-size: 1rem;
+  padding: 0 0.8rem;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid var(--secondary-color);
+  margin-bottom: 2rem;
+}
+
+.submit__btn {
+  position: static !important;
+  width: 100%;
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-color) !important;
+}
+
+/*******************************************************/
+
+/***********Election Portal JS *****************/
+.electionPortal {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.electionPortal__details {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.electionPortal__details h2 {
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.electionPortal__details {
+  width: 80%;
+}
+.table__container {
+  overflow-x: auto;
+  margin-top: 50px;
+  padding: 10px;
+  margin: 10px;
+  background-color: var(--primary-color) !important;
+  box-shadow: 0px 0px 2px var(--secondary-color) !important;
+}
+
+
+tr {
+  height: 40px !important;
+  
+}
+
+th {
+  max-width: 125px;
+  min-width: 125px;
+  padding: 0 !important;
+  overflow-x: auto;
+  white-space: nowrap;
+  text-align: center !important;
+  font-weight: bold !important;
+  color:var(--secondary-color) !important;
+}
+
+td {
+  height: 40px !important;
+  padding: 5px !important;
+  text-align: center !important;
+  color: var(--secondary-color) !important;
+}
+
+.electionPortal__details .finalise__btn{
+  margin: 1rem 0 !important;
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-color) !important;
+  
+}
+
+/*******Creation Phase*************/
+
+.creationPhase {
+  border: 3px solid var(--secondary-color);
+  margin-top: 8rem;
+  padding: 1rem;
+  width: 50%;
+  min-width: 250px;
+}
+
+.creationPhase h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+
+/****************Ended phase**********/
+
+.endedPhase{
+  padding: 0 2rem;
+  font-size: max(2vw,1rem);
+  border-bottom: 2px solid var(--secondary-color);
+}
